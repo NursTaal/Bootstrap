@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <title>Hello</title>
+</head>
+<body>
+<div>
+
+    <form th:method="GET" th:action="@{/roles/user}">
+        <input type="submit" value="Creat ROLE_USER"/>
+    </form>
+    <p></p>
+    <form th:method="GET" th:action="@{/roles/admin}">
+        <input type="submit" value="Creat ROLE_ADMIN"/>
+    </form>
+    <p></p>
+    <a th:href="@{/}">Index page</a>
+
+</div>
+<br>
+<hr/>
+<hr/>
+<a th:href="@{/admin/new}">Creat new user</a>
+<p></p>
+<a th:href="@{/logout}">Logout</a>
+
+</body>
+</html>
