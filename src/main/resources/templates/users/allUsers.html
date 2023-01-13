@@ -17,6 +17,7 @@
 
         <tr th:each="user : ${users}">
             <td th:utext="${user.getId()}">Id</td>
+            <td th:utext="${user.getSurName()}">SurName</td>
             <td th:utext="${user.getUsername()}">Username</td>
             <td th:utext="${user.getPassword()}">Password</td>
             <td th:each="role :${user.getAuthorities()}">
