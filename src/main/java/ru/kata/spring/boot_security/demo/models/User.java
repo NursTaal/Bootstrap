@@ -1,34 +1,49 @@
 package ru.kata.spring.boot_security.demo.models;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
+
 @Entity
-@Table(name ="users")
+@Table(name = "users")
 public class User implements UserDetails {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name")
-    private String username;
-
-    @Column(name = "sur_name")
-    private String surName;
+    @Column(name = "email", unique = true)
+    @Email
+    @Size(min=4, message = "Email have to minimum 4 chars! ")
+    private String email;
 
     @Column(name = "password")
+    @Size(min = 2, message = "name have to minimum 2 chars")
     private String password;
+
+    @Column(name = "first_name")
+    @Size(min = 2, message = "name have to minimum 2 chars")
+    private String firstName;
+
+    @Column(name = "last_name")
+    @Size(min = 2, message = "name have to minimum 2 chars")
+    private String lastName;
+
+    @Column(name = "age")
+    @Min(value = 0,message = "Age must be more 0 less 127")
+    private Byte age;
 
     @Transient
     private String confirm;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -37,17 +52,13 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String surName, String password) {
-        this.username = username;
-        this.surName = surName;
-        this.password = password;
-    }
 
-    public User(String userName, String surName, String password, Set<Role> roles) {
-        this.username = userName;
-        this.surName = surName;
+    public User(String email, String password, String firstName, String lastName, Byte age) {
+        this.email = email;
         this.password = password;
-        this.roles = roles;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
     }
 
     @Override
@@ -55,53 +66,45 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public String getConfirm() {
-        return confirm;
-    }
-
-    public void setConfirm(String confirm) {
-        this.confirm = confirm;
+    public void setEmail(String username) {
+        this.email = username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
+    @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getEmail() {
+        return email;
     }
 
-    public Long getId() {
-        return id;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getSurName() {
-        return surName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Byte getAge() {
+        return age;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setAge(Byte age) {
+        this.age = age;
     }
 
     @Override
@@ -119,18 +122,38 @@ public class User implements UserDetails {
         return true;
     }
 
+    public String getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(String confirm) {
+        this.confirm = confirm;
+    }
+
     @Override
     public boolean isEnabled() {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userName='" + username + '\'' +
-                ", surName='" + surName + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public void setPassword(String password) {
+        this.password = password;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
 }

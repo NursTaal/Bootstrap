@@ -1,43 +1,40 @@
 package ru.kata.spring.boot_security.demo.models;
 
+import org.hibernate.mapping.Collection;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "role")
-public class Role implements GrantedAuthority {
-
+@Table(name = "roles")
+public class Role implements GrantedAuthority  {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
 
-    @Column(name = "role")
+    @Column(name = "name",unique = true)
     private String name;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public Role() {
-    }
-
-    public Role(Long id) {
-        this.id = id;
     }
 
     public Role(String name) {
         this.name = name;
     }
 
-    public Role(Long id, String role) {
+    public Role(Long id) {
         this.id = id;
-        this.name = role;
+    }
+
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {
@@ -49,11 +46,12 @@ public class Role implements GrantedAuthority {
     }
 
     public String getName() {
-        return name;
+
+        return name.split("_")[1];
     }
 
-    public void setName(String role) {
-        this.name = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<User> getUsers() {
@@ -67,5 +65,13 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return name.split("_")[1];
+    }
+    public Set<Role> getSingleton(){
+        return Collections.singleton(new Role(name));
     }
 }

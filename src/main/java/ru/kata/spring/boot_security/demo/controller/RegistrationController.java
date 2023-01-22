@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.controllers;
+package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
-
 
 @Controller
 public class RegistrationController {
@@ -26,7 +25,7 @@ public class RegistrationController {
 
     @GetMapping(value = "/")
     public String printWelcome() {
-        return "index";
+        return "redirect:/login";
     }
 
     @GetMapping("/registration")
@@ -58,7 +57,6 @@ public class RegistrationController {
 
         return "redirect:/login";
     }
-
     @GetMapping("/roles")
     public String RolesCreater() {
         return "roles";
@@ -66,21 +64,21 @@ public class RegistrationController {
 
     @GetMapping("/roles/user")
     public String CreatUserRole(Model model) {
-        userService.saveUser(new Role("ROLE_USER"));
+        userService.saveRole(new Role("ROLE_USER"));
         return "roles";
     }
-
     @GetMapping("/roles/admin")
     public String CreatAdminRole(Model model) {
         Role role = new Role("ROLE_ADMIN");
-        userService.saveUser(role);
-        if (!userService.contains("admin")) {
-            User user = new User("admin", "admin","admin");
-            userService.saveUser(user, role);
+        userService.saveRole(role);
+        if (!userService.contains("admin")){
+            User user = new User("admin@mail.ru","admin","admin","admin", (byte) 50);
+            userService.saveRoleUser(user, role);
         }
 
         return "roles";
     }
+
 
 }
 
